@@ -31,7 +31,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _QueueControl: 1
     m_Colors:
     - _SideColour: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
     - _TopColour: {r: 0.40606087, g: 0.6013604, b: 0.6886792, a: 1}

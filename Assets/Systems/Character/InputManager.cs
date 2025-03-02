@@ -11,6 +11,7 @@ public class InputManager : SingletonBehaviour<InputManager>
     private bool fireInput;
     private bool jumpInput;
     private bool sprintInput;
+    private bool aimInput;
 
     public static Vector2 MoveInput { get => Instance.moveInput; set => Instance.moveInput = value; }
     public static Vector2 LookInput { get => Instance.lookInput; set => Instance.lookInput = value; }
@@ -18,6 +19,7 @@ public class InputManager : SingletonBehaviour<InputManager>
     public static bool JumpInput { get => Instance.jumpInput; set => Instance.jumpInput = value; }
     public static bool SprintInput { get => Instance.sprintInput; set => Instance.sprintInput = value; }
     public static bool CrouchInput { get => Instance.crouchInput; set => Instance.crouchInput = value; }
+    public static bool AimInput { get => Instance.aimInput; set => Instance.aimInput = value; }
 
 
 
@@ -46,6 +48,10 @@ public class InputManager : SingletonBehaviour<InputManager>
     public void GetCrouchInput(InputAction.CallbackContext context)
     {
         crouchInput = context.ReadValueAsButton();
+    }
+    public void GetAimInput(InputAction.CallbackContext context)
+    {
+        aimInput = context.ReadValueAsButton();
     }
 
 

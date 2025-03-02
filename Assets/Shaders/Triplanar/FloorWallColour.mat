@@ -48,7 +48,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Tiling: 0.25
+    - _QueueControl: 1
+    - _Tiling: 1
     m_Colors:
     - _SideColour: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
   m_BuildTextureStacks: []
