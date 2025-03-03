@@ -26,15 +26,17 @@ public class RBPlayerMotor : LunarScript
     [SerializeField] protected float aimModifierPerDegree = 0.99f;
     [SerializeField] protected bool canAim;
     [SerializeField] protected bool aiming;
-    [SerializeField] protected bool sideAiming;
+    [SerializeField] protected bool altAiming;
 
 
     //View
     [SerializeField, Header("View")] protected float baseFOV = 80;
-    [SerializeField, Tooltip("This value is subtracted from the Base FOV when it is in effect.")] protected float aimFOV = -10, sprintFOV = 5;
+    [SerializeField, Tooltip("This value is subtracted from the Base FOV when it is in effect.")] protected float aimFOV = -10, altAimFOV = -5, sprintFOV = 5;
     [SerializeField, Tooltip("How quickly, per degree of FOV in the transition, your view moves towards the target fov.")] protected float fovMoveSpeed = 0.02f;
     [SerializeField] protected float crouchedHeadHeight = 0.1f;
     [SerializeField] protected float standingHeadHeight = 0.55f;
+    [SerializeField] protected float slideHeadTiltAngle = 5;
+    [SerializeField] protected float slideFOV = 5;
     protected float currentFOV;
 
     //Movement Parameters
@@ -177,7 +179,7 @@ public class RBPlayerMotor : LunarScript
     {
         if (InputManager.LookInput != Vector2.zero)
         {
-            Vector2 lookSpeed = this.lookSpeed * (aiming || sideAiming ? aimLookModifier : 1);
+            Vector2 lookSpeed = this.lookSpeed * (aiming || altAiming ? aimLookModifier : 1);
             lookPitch -= Time.deltaTime * lookSpeed.y * InputManager.LookInput.y;
             lookPitch = Mathf.Clamp(lookPitch, -lookPitchClamp, lookPitchClamp);
             transform.rotation *= Quaternion.Euler(0, InputManager.LookInput.x * lookSpeed.x * Time.deltaTime, 0);
@@ -190,13 +192,19 @@ public class RBPlayerMotor : LunarScript
     void CheckAimState()
     {
         aiming = InputManager.AimInput;
+        if (aiming)
+        {
+            sprinting = false;
+        }
 
         //The mother of all ternary statements...
         float fov = baseFOV + 
             //Are we aiming?
-            (sideAiming ? (aimFOV / 2) :
+            (altAiming ? altAimFOV :
             //Are we side aiming?
             aiming ? aimFOV :
+            //Are we sliding
+            isSliding ? slideFOV :
             //Are we sprinting or sliding?
             ((sprinting && InputManager.MoveInput != Vector2.zero) || isSliding) ? sprintFOV :
             //Are we moving normally or crouching?
@@ -249,7 +257,6 @@ public class RBPlayerMotor : LunarScript
     {
         if (!isGrounded)
         {
-            sprinting = false;
             rb.linearDamping = currentAirborneIgnoreDampTime <= 0 ? 0 : airborneDamping;
         }
         else
@@ -270,14 +277,14 @@ public class RBPlayerMotor : LunarScript
             if(sprinting)
             {
                 //If we try to crouch while sprinting, we'll slide instead.
-                if (crouching)
+                if (canSlide && crouching)
                 {
                     InputManager.CrouchInput = false;
                     crouching = false;
                     StartSlide();
                 }
             }
-            sprinting = InputManager.SprintInput;
+            sprinting = InputManager.SprintInput && !aiming;
             if (crouching)
             {
                 if (sprinting)
@@ -291,6 +298,7 @@ public class RBPlayerMotor : LunarScript
     void StartSlide()
     {
         isSliding = true;
+        rb.AddForce(transform.forward * slidePushOffForce);
     }
     void UpdateSlide()
     {
@@ -323,7 +331,7 @@ public class RBPlayerMotor : LunarScript
             }
             else
             {
-                Vector3 moveForce = (aiming ? aimWalkMoveMultiply : sideAiming ? sideAimWalkMoveMultiply : 1) 
+                Vector3 moveForce = (aiming ? aimWalkMoveMultiply : altAiming ? sideAimWalkMoveMultiply : 1) 
                     * (sprinting ? sprintForceMultiply : crouching ? crouchWalkForceMultiply :
                     slowWalking ? slowWalkForceMultiply : 1)
                     * baseMoveForce

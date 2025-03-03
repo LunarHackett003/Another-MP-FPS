@@ -2180,11 +2180,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.24999988, y: 0.9999999, z: 0.2}
   m_Center: {x: 0.12499952, y: 0.5, z: 0.09999996}
---- !u!4 &1182253084 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-  m_PrefabInstance: {fileID: 5093079333415150709}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1200362013
 GameObject:
   m_ObjectHideFlags: 0
@@ -2548,10 +2543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: d75e12ca811b21f40b32c170f6458727, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 1182253084}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: -2807262474462763031, guid: d75e12ca811b21f40b32c170f6458727, type: 3}
       insertIndex: -1
@@ -2592,11 +2584,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.05, y: 1, z: 0.05}
   m_Center: {x: -5.353101e-24, y: 0.5, z: 6.617445e-24}
---- !u!4 &1305770554 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d75e12ca811b21f40b32c170f6458727, type: 3}
-  m_PrefabInstance: {fileID: 1305770551}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1305770555 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8391222552659086748, guid: d75e12ca811b21f40b32c170f6458727, type: 3}
@@ -3053,7 +3040,7 @@ MonoBehaviour:
   standingCapsuleCentre: {x: 0, y: -0.05, z: 0}
   followPlatformPosition: 1
   followPlatformRotation: 1
-  canSlide: 0
+  canSlide: 1
   isSliding: 0
   slideDamping: 0.02
   slidePushOffForce: 15
@@ -3719,63 +3706,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &5093079333415150709
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1305770554}
-    m_Modifications:
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.00000004371139
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 6.1232336e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 6.1232336e-17
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4632884130678386594, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7799695520981906091, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
-      propertyPath: m_Name
-      value: PlywoodPanel (1)
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f41c7a6af7098304f98a2a52c9ce3600, type: 3}
 --- !u!1001 &6245868660440025720
 PrefabInstance:
   m_ObjectHideFlags: 0
