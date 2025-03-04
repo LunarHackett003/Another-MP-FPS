@@ -35,8 +35,11 @@ public class RBPlayerMotor : LunarScript
     [SerializeField, Tooltip("How quickly, per degree of FOV in the transition, your view moves towards the target fov.")] protected float fovMoveSpeed = 0.02f;
     [SerializeField] protected float crouchedHeadHeight = 0.1f;
     [SerializeField] protected float standingHeadHeight = 0.55f;
+    [SerializeField] protected float strafeHeadTiltAngle = 2;
     [SerializeField] protected float slideHeadTiltAngle = 5;
     [SerializeField] protected float slideFOV = 5;
+    [SerializeField] protected float headTiltSpeed = 12;
+    protected float headTiltAngle;
     protected float currentFOV;
 
     //Movement Parameters
@@ -183,15 +186,18 @@ public class RBPlayerMotor : LunarScript
             lookPitch -= Time.deltaTime * lookSpeed.y * InputManager.LookInput.y;
             lookPitch = Mathf.Clamp(lookPitch, -lookPitchClamp, lookPitchClamp);
             transform.rotation *= Quaternion.Euler(0, InputManager.LookInput.x * lookSpeed.x * Time.deltaTime, 0);
-            head.localRotation = Quaternion.Euler(lookPitch, 0, 0);
             oldLook = new(transform.eulerAngles.x, lookPitch);
         }
         if (lookDelta != oldLook)
             lookDelta = new Vector2(transform.eulerAngles.x % 360, lookPitch) - oldLook;
+
+        headTiltAngle = Mathf.Lerp(headTiltAngle, (isSliding ? slideHeadTiltAngle : strafeHeadTiltAngle) * InputManager.MoveInput.x, headTiltSpeed * Time.fixedDeltaTime);
+        head.localRotation = Quaternion.Euler(lookPitch, 0, headTiltAngle);
     }
     void CheckAimState()
     {
         aiming = InputManager.AimInput;
+        altAiming = aiming && InputManager.AltAimInput;
         if (aiming)
         {
             sprinting = false;
@@ -273,18 +279,16 @@ public class RBPlayerMotor : LunarScript
             //we'll assign Crouching first, and sprinting at the end of CheckState()
             //This means that sprinting starts the frame AFTER you press it, while crouching should start immediately upon pressing crouch.
             //Doing it this way allows me to detect slides better - if we're already sprinting and THEN we crouch, we'll slide. If we're crouching and then we sprint, we'll get up and sprint.
-            crouching = InputManager.CrouchInput;
-            if(sprinting)
+            crouching = InputManager.CrouchInput && !isSliding;
+            if(sprinting || !isGrounded)
             {
-                //If we try to crouch while sprinting, we'll slide instead.
+                //If we try to crouch while sprinting or airborne, we'll slide instead.
                 if (canSlide && crouching)
                 {
-                    InputManager.CrouchInput = false;
-                    crouching = false;
                     StartSlide();
                 }
             }
-            sprinting = InputManager.SprintInput && !aiming;
+            sprinting = InputManager.SprintInput && !aiming && !isSliding;
             if (crouching)
             {
                 if (sprinting)
@@ -298,11 +302,12 @@ public class RBPlayerMotor : LunarScript
     void StartSlide()
     {
         isSliding = true;
-        rb.AddForce(transform.forward * slidePushOffForce);
+        if(isGrounded)
+            rb.AddForce(transform.forward * slidePushOffForce, ForceMode.Impulse);
     }
     void UpdateSlide()
     {
-        if (!isGrounded || !InputManager.CrouchInput || rb.linearVelocity.sqrMagnitude < 2f)
+        if (!InputManager.CrouchInput || rb.linearVelocity.sqrMagnitude < 2f)
         {
             StopSlide();
         }
@@ -327,7 +332,7 @@ public class RBPlayerMotor : LunarScript
         {
             if (isSliding)
             {
-                rb.AddForce(Vector3.ProjectOnPlane(transform.right * slideSteerForce, groundNormal));
+                rb.AddForce(Vector3.ProjectOnPlane(InputManager.MoveInput.x * slideSteerForce * transform.right, groundNormal));
             }
             else
             {
@@ -352,6 +357,7 @@ public class RBPlayerMotor : LunarScript
             if(isGrounded || canMultiJump && multiJumpsRemaining > 0)
             {
                 InputManager.JumpInput = false;
+                rb.linearVelocity.Scale(new(1, 0, 1));
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
                 if (canMultiJump)
                 {
