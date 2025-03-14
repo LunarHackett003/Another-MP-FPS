@@ -3,7 +3,7 @@
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 32
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -35,7 +35,7 @@ Material:
     - _QueueControl: 0
     m_Colors:
     - _SideColour: {r: 1, g: 1, b: 1, a: 1}
-    - _TopColour: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 1}
+    - _TopColour: {r: 0.9528302, g: 0.9528302, b: 0.9528302, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &5911464190726329641

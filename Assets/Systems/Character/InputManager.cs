@@ -3,10 +3,12 @@ using UnityEngine.InputSystem;
 
 public class InputManager : SingletonBehaviour<InputManager>
 {
+    public PlayerInput playerInput;
+    public PauseMenu pauseMenu;
+
+
     private Vector2 lookInput;
     private bool crouchInput;
-
-    public PlayerInput playerInput;
     private Vector2 moveInput;
     private bool fireInput;
     private bool jumpInput;
@@ -14,16 +16,18 @@ public class InputManager : SingletonBehaviour<InputManager>
     private bool aimInput;
     private bool altAimInput;
     private bool slowWalkInput;
+    private bool dashInput;
 
-    public static Vector2 MoveInput { get => Instance.moveInput; set => Instance.moveInput = value; }
-    public static Vector2 LookInput { get => Instance.lookInput; set => Instance.lookInput = value; }
-    public static bool FireInput { get => Instance.fireInput; set => Instance.fireInput = value; }
-    public static bool JumpInput { get => Instance.jumpInput; set => Instance.jumpInput = value; }
-    public static bool SprintInput { get => Instance.sprintInput; set => Instance.sprintInput = value; }
-    public static bool CrouchInput { get => Instance.crouchInput; set => Instance.crouchInput = value; }
-    public static bool AimInput { get => Instance.aimInput; set => Instance.aimInput = value; }
-    public static bool AltAimInput { get => Instance.altAimInput; set => Instance.altAimInput = value; }
-    public static bool SlowWalkInput { get => Instance.slowWalkInput; set => Instance.slowWalkInput = value; }
+    public static Vector2 MoveInput { get => PauseMenu.GamePaused ? Vector2.zero : Instance.moveInput; set => Instance.moveInput = value; }
+    public static Vector2 LookInput { get => PauseMenu.GamePaused ? Vector2.zero : Instance.lookInput; set => Instance.lookInput = value; }
+    public static bool FireInput { get => Instance.fireInput && !PauseMenu.GamePaused; set => Instance.fireInput = value; }
+    public static bool JumpInput { get => Instance.jumpInput && !PauseMenu.GamePaused; set => Instance.jumpInput = value; }
+    public static bool SprintInput { get => Instance.sprintInput && !PauseMenu.GamePaused; set => Instance.sprintInput = value; }
+    public static bool CrouchInput { get => Instance.crouchInput && !PauseMenu.GamePaused; set => Instance.crouchInput = value; }
+    public static bool AimInput { get => Instance.aimInput && !PauseMenu.GamePaused; set => Instance.aimInput = value; }
+    public static bool AltAimInput { get => Instance.altAimInput && !PauseMenu.GamePaused; set => Instance.altAimInput = value; }
+    public static bool SlowWalkInput { get => Instance.slowWalkInput && !PauseMenu.GamePaused; set => Instance.slowWalkInput = value; }
+    public static bool DashInput { get => Instance.dashInput && !PauseMenu.GamePaused; set => Instance.dashInput = value; }
 
     public bool gamepadCrouchToggle = true;
     public bool altAimToggle = true;
@@ -97,6 +101,17 @@ public class InputManager : SingletonBehaviour<InputManager>
             crouchInput = context.ReadValueAsButton();
         }
     }
+
+    public void GetDashInput(InputAction.CallbackContext context)
+    {
+        dashInput = context.ReadValueAsButton();
+    }
+
+    public void GetPauseInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            pauseMenu.TogglePause();
+    }
     #endregion
 
     private void Awake()
@@ -111,5 +126,10 @@ public class InputManager : SingletonBehaviour<InputManager>
             Destroy(gameObject);
             return;
         }
+    }
+
+    public void PauseGame(bool paused)
+    {
+        playerInput.DeactivateInput();
     }
 }

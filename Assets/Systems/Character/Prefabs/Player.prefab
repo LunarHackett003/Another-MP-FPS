@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7739354256815156093}
   - component: {fileID: 5326920995113008035}
   - component: {fileID: 3088083578567000450}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,8 +98,8 @@ GameObject:
   - component: {fileID: 5515138310644021310}
   - component: {fileID: 7578074039436073281}
   - component: {fileID: 4869047815468142900}
-  m_Layer: 0
-  m_Name: Capsule
+  m_Layer: 6
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -120,6 +120,8 @@ Transform:
   m_Children:
   - {fileID: 7375584084835298347}
   - {fileID: 973683984579498635}
+  - {fileID: 4622937040024782730}
+  - {fileID: 7314240794760875910}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &5515138310644021310
@@ -142,9 +144,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.85
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.075, z: 0}
 --- !u!54 &7578074039436073281
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -188,65 +190,59 @@ MonoBehaviour:
   capsule: {fileID: 5515138310644021310}
   cineCam: {fileID: 3029103881471833268}
   head: {fileID: 7375584084835298347}
-  lookSpeed: {x: 10, y: 10}
-  lookPitchClamp: 89
-  aimLookModifier: 0.8
-  aimModifierPerDegree: 0.99
+  viewParams: {fileID: 11400000, guid: 8598b2907c494fa4e81eee01d04b12f2, type: 2}
   canAim: 1
-  aiming: 0
-  altAiming: 0
-  baseFOV: 80
-  aimFOV: -10
-  altAimFOV: -5
-  sprintFOV: 5
-  fovMoveSpeed: 10
-  crouchedHeadHeight: 0.04
-  standingHeadHeight: 0.55
-  strafeHeadTiltAngle: -0.1
-  slideHeadTiltAngle: -1
-  slideFOV: 5
-  headTiltSpeed: 3
-  baseMoveForce: 20
-  walkDamping: 8
-  sprintForceMultiply: 2
-  slowWalkForceMultiply: 0.7
-  aimWalkMoveMultiply: 0.7
-  groundPushForce: 2
-  slowWalking: 0
-  sprinting: 0
-  crouching: 0
-  sideAimWalkMoveMultiply: 0.5
-  crouchWalkForceMultiply: 0.5
-  crouchedCapsuleHeight: 1.2
-  standingCapsuleHeight: 1.9
-  crouchHeadSpeed: 5
-  crouchedCapsuleCentre: {x: 0, y: -0.38, z: 0}
-  standingCapsuleCentre: {x: 0, y: -0.05, z: 0}
-  followPlatformPosition: 1
-  followPlatformRotation: 1
+  aimParams: {fileID: 11400000, guid: dcb30aa0e4dfba6438e4ae88c905fab2, type: 2}
   canSlide: 1
-  isSliding: 0
-  slideDamping: 1.3
-  slidePushOffForce: 6
-  slideSteerForce: 0.5
-  jumpForce: 5.5
-  airborneDamping: 0.1
-  airMoveForce: 2
-  canMultiJump: 0
-  multiJumps: 2
-  isGrounded: 1
+  moveParams: {fileID: 11400000, guid: c76eaa6709cd9934793c6597507242d0, type: 2}
+  canStep: 1
+  upperStepTransform: {fileID: 4622937040024782730}
+  lowerStepTransform: {fileID: 7314240794760875910}
+  stepParams: {fileID: 11400000, guid: 7acf92476ed18fc45baeaf359152104e, type: 2}
+  canMantle: 1
+  debugMantle: 1
+  mantleParams: {fileID: 11400000, guid: 2d9d92cf5009fa2498b10031fa6b7eca, type: 2}
+  canDash: 1
+  dashParams: {fileID: 11400000, guid: ef92ecc3176da344b9fd58feebe748cc, type: 2}
   groundCheckOrigin: {x: 0, y: 0, z: 0}
   groundCheckDistance: 0.7
   groundCheckRadius: 0.4
   groundChecklayermask:
     serializedVersion: 2
     m_Bits: 1
-  useCoyoteTime: 0
-  coyoteTime: 0
-  canMantle: 0
-  canVault: 0
-  connectedBody: {fileID: 0}
-  lastConnectedBody: {fileID: 0}
+  debugGroundCheck: 1
+  dashUsed: 0
+--- !u!1 &3792357219554433636
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4622937040024782730}
+  m_Layer: 6
+  m_Name: UpperStepTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4622937040024782730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3792357219554433636}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3539178239322457369}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4445506613273759501
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,7 +254,7 @@ GameObject:
   - component: {fileID: 973683984579498635}
   - component: {fileID: 7619089029905757767}
   - component: {fileID: 8597285928480946984}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,8 +340,8 @@ GameObject:
   - component: {fileID: 5883536430994536081}
   - component: {fileID: 919919658596106210}
   - component: {fileID: 6768420893122669795}
-  m_Layer: 0
-  m_Name: Cube (1)
+  m_Layer: 6
+  m_Name: Visor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -359,13 +355,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6974819706520927432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.07, z: 0.168}
-  m_LocalScale: {x: 0.80280703, y: 0.32068107, z: 0.5322595}
+  m_LocalRotation: {x: -0, y: -0, z: 0.70701593, w: 0.7071976}
+  m_LocalPosition: {x: 0, y: 0.055, z: 0.274}
+  m_LocalScale: {x: 0.46, y: 0.66237056, z: 0.43502045}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7375584084835298347}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 89.985}
 --- !u!33 &919919658596106210
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -397,7 +393,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 4fa8d4ed404d505438fb11d6226abfc1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -429,7 +425,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7125072866774950086}
   - component: {fileID: 3029103881471833268}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CineCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +473,7 @@ MonoBehaviour:
   Lens:
     FieldOfView: 60.000004
     OrthographicSize: 5
-    NearClipPlane: 0.3
+    NearClipPlane: 0.1
     FarClipPlane: 1000
     Dutch: 0
     ModeOverride: 0
@@ -503,7 +499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7375584084835298347}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -526,5 +522,36 @@ Transform:
   - {fileID: 7125072866774950086}
   - {fileID: 7739354256815156093}
   - {fileID: 5883536430994536081}
+  m_Father: {fileID: 3539178239322457369}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7804772282839904838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7314240794760875910}
+  m_Layer: 6
+  m_Name: LowerStepTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7314240794760875910
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804772282839904838}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.927, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 3539178239322457369}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
