@@ -18,6 +18,9 @@ public class RBPlayerMotor : LunarScript
 
     //Transforms
     [SerializeField, Header("Transforms")] protected Transform head;
+    [SerializeField] protected Transform ikAimTransform;
+    [SerializeField] protected Quaternion ikAimOffset;
+    [SerializeField] protected Transform crouchTransform;
 
     //Scriptable References
     [SerializeField, Header("Parameter References")] protected ViewParams viewParams;
@@ -25,6 +28,8 @@ public class RBPlayerMotor : LunarScript
     [SerializeField] protected AimParams aimParams;
     [SerializeField] protected bool canSlide;
     [SerializeField] protected MoveParams moveParams;
+    [SerializeField] Vector3 crouchTransformAxis;
+    [SerializeField] protected float crouchTransformStandHeight, crouchTransformCrouchHeight;
 
     [SerializeField, Header("Stepping"), Tooltip("Can the player step up ledges?")] protected bool canStep;
     [SerializeField, Tooltip("The transform we cast from to check for steps")] protected Transform upperStepTransform, lowerStepTransform;
@@ -36,6 +41,8 @@ public class RBPlayerMotor : LunarScript
 
     [SerializeField, Header("Dashing"), Tooltip("Can the player dash?")] protected bool canDash;
     [SerializeField] protected DashParams dashParams;
+
+    public float aimAmount;
 
     //Aiming
     protected float lookPitch;
@@ -63,7 +70,7 @@ public class RBPlayerMotor : LunarScript
     [SerializeField] protected Vector3 groundCheckOrigin;
     [SerializeField] protected float groundCheckDistance = 1.2f, groundCheckRadius = 0.4f;
     [SerializeField] protected LayerMask groundChecklayermask;
-    protected Vector3 groundNormal;
+    [SerializeField] protected Vector3 groundNormal;
     [SerializeField] protected bool debugGroundCheck;
 
     protected float mantleTime, mantleDistance, mantleTimeInc;
@@ -105,6 +112,11 @@ public class RBPlayerMotor : LunarScript
             capsule = GetComponent<CapsuleCollider>();
 
         uncrouchCheckPosition = Vector3.up * moveParams.crouchObstructionVerticalOffset;
+
+        if (crouchTransform != null)
+        {
+            crouchTransformCrouchHeight = crouchTransformStandHeight + moveParams.crouchedCapsuleCentre.y;
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -233,6 +245,11 @@ public class RBPlayerMotor : LunarScript
         headTiltAngle = Mathf.Lerp(headTiltAngle, (isSliding ? viewParams.slideHeadTiltAngle : viewParams.strafeHeadTiltAngle) * InputManager.MoveInput.x, viewParams.headTiltSpeed * Time.fixedDeltaTime);
         head.localRotation = Quaternion.Euler(lookPitch, 0, 0);
         cineCam.transform.localEulerAngles = new Vector3(0, 0, headTiltAngle);
+
+        if(ikAimTransform != null)
+        {
+            ikAimTransform.localRotation = head.localRotation * ikAimOffset;
+        }
     }
     void CheckAimState()
     {
@@ -242,6 +259,7 @@ public class RBPlayerMotor : LunarScript
         {
             sprinting = false;
         }
+        aimAmount = Mathf.MoveTowards(aimAmount, aiming ? 1 : 0, aimParams.fovMoveSpeed * Time.deltaTime);
 
         //The mother of all ternary statements...
         float fov = viewParams.baseFOV +
@@ -376,6 +394,10 @@ public class RBPlayerMotor : LunarScript
         head.localPosition = Vector3.Lerp(Vector3.up * viewParams.standingHeadHeight, Vector3.up * viewParams.crouchedHeadHeight, currentCrouchLerp);
         capsule.height = Mathf.Lerp(moveParams.standingCapsuleHeight, moveParams.crouchedCapsuleHeight, currentCrouchLerp);
         capsule.center = Vector3.Lerp(moveParams.standingCapsuleCentre, moveParams.crouchedCapsuleCentre, currentCrouchLerp);
+        if(crouchTransform != null)
+        {
+            crouchTransform.localPosition = Vector3.Lerp(crouchTransformAxis * crouchTransformStandHeight, crouchTransformAxis * crouchTransformCrouchHeight, currentCrouchLerp);
+        }
     }
     void MovePlayer()
     {
@@ -387,12 +409,16 @@ public class RBPlayerMotor : LunarScript
             }
             else
             {
+
+                Vector3 right = Vector3.Cross(-transform.forward, groundNormal);
+                Vector3 forward = Vector3.Cross(right, groundNormal);
+
                 Vector3 moveForce = (aiming ? moveParams.aimWalkMoveMultiply : altAiming ? moveParams.sideAimWalkMoveMultiply : 1) 
                     * (sprinting ? moveParams.sprintForceMultiply : crouching ? moveParams.crouchWalkForceMultiply :
                     slowWalking ? moveParams.slowWalkForceMultiply : 1)
                     * moveParams.baseMoveForce
-                    * Vector3.ProjectOnPlane(new Vector3(InputManager.MoveInput.x, 0, InputManager.MoveInput.y), groundNormal);
-                rb.AddForce(transform.rotation * moveForce);
+                    * (right * InputManager.MoveInput.x + forward * InputManager.MoveInput.y);
+                rb.AddForce(moveForce);
                 rb.AddForce(Vector3.ProjectOnPlane(-Physics.gravity, groundNormal));
             };
             //Add a force to keep the player on the ground. This can be scaled if the player bounces too much
@@ -469,10 +495,16 @@ public class RBPlayerMotor : LunarScript
         {
             if(Physics.BoxCast(upperStepTransform.position, stepParams.stepBoxSize, -transform.up, out RaycastHit hit2, transform.rotation, stepParams.stepDistance + 0.03f, stepParams.stepLayermask, QueryTriggerInteraction.Ignore))
             {
+
+                Debug.DrawRay(hit2.point, hit2.normal);
+                Debug.Log($"hit2 normal = {hit2.normal}");
+                if (hit2.normal.y < 0.85f)
+                    return;
                 if(hit2.rigidbody != null)
                 {
                     mantleTargetRB = hit2.rigidbody;
                 }
+                print("climbing steps");
                 StartCoroutine(MantleToPoint(hit2.point, stepParams.stepSpeed));
             }
             
@@ -496,6 +528,7 @@ public class RBPlayerMotor : LunarScript
                 {
                     if(hit.rigidbody != null)
                         mantleTargetRB = hit.rigidbody;
+                    print("mantling");
                     StartCoroutine(MantleToPoint(hit.point, mantleParams.mantleSpeed));
                 }
             }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepHeight: 0.35
   stepDistance: 0.45
-  stepSpeed: 3
+  stepSpeed: 2
   stepLayermask:
     serializedVersion: 2
     m_Bits: 1
-  stepBoxSize: {x: 0.01, y: 0.01, z: 0}
+  stepBoxSize: {x: 0.01, y: 0.01, z: 0.01}
