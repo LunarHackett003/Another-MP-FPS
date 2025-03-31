@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "com.community.netcode.transport.steamnetworkingsockets": "https://github.com/Unity-Technologies/multiplayer-community-contributions.git?path=/Transports/com.community.netcode.transport.steamnetworkingsockets",
+    "com.jiaozi158.unity-physically-based-sky-urp": "https://github.com/jiaozi158/UnityPhysicallyBasedSkyURP.git",
+    "com.jiaozi158.unityssgiurp": "https://github.com/jiaozi158/UnitySSGIURP.git",
     "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net",
     "com.unity.ai.navigation": "2.0.5",
     "com.unity.animation.rigging": "1.3.0",
