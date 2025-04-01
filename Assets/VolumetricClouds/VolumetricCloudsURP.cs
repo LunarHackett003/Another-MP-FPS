@@ -929,7 +929,10 @@ public class VolumetricCloudsURP : ScriptableRendererFeature
             {
                 VisibleLight shadowLight = lightData.visibleLights[shadowLightIndex];
                 Light light = shadowLight.light;
-                if ((light.shadows != LightShadows.None || !RenderSettings.sun.isActiveAndEnabled) && shadowLight.lightType == LightType.Directional)
+                bool b1 = (light != null && light.shadows != LightShadows.None);
+                bool b2 = RenderSettings.sun == null || !RenderSettings.sun.isActiveAndEnabled;
+                bool b3 = shadowLight.lightType == LightType.Directional;
+                if ((b1 || b2) && b3)
                     return light;
             }
 
