@@ -20,7 +20,7 @@
       "dependencies": {
         "com.unity.render-pipelines.universal": "14.0.7"
       },
-      "hash": "772232800abe28427569218bf14f1fa42ad983ba"
+      "hash": "5e16d923616dbc38e0bbb3e062be22fa5903ccfe"
     },
     "com.jiaozi158.unityssgiurp": {
       "version": "https://github.com/jiaozi158/UnitySSGIURP.git",
